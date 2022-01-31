@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:radium_tech/Screens/user_list.dart';
 import 'Services/globals.dart';
 import 'Services/login_api.dart';
 import 'myhome.dart';
@@ -14,11 +15,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _fromKey = GlobalKey<FormState>();
-  //final emailController = TextEditingController();
-  //final passController = TextEditingController();
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
   String _email = '';
   String _password = '';
   String message = '';
+  bool _validate = false;
+
+
 
 
   loginPressed() async {
@@ -29,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => const MyHomePage(),
+              builder: (BuildContext context) => const UserData(),
             ));
       } else {
         setState(() {
@@ -37,7 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
 
       }
-    } else {
+    }
+    else {
       errorSnackBar(context, 'enter all required fields');
     }
   }
@@ -72,10 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     onChanged: (value) {
                       _email = value;
                     },
-                    //controller: emailController,
+                    controller: emailController,
 
                     validator: (value) {
-                      if(value == null) {
+                      if(value == null || value.isEmpty) {
                         return 'Email cannot be empty';
                       }
                       return  null;
@@ -99,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onChanged: (value) {
                       _password = value;
                     },
+                    controller: passController,
                     //controller: passController,
                     validator: (value) {
                       if(value == null) {
@@ -116,23 +122,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                   ),
                 ),
-         /*       Container(
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                  child: const Text(
-                    "Forgot your password?",
-                    style: TextStyle(fontSize: 12, color: Color(0XFF2661FA)),
-                  ),
-                ),*/
                 SizedBox(height: size.height * 0.05),
                 Container(
                   alignment: Alignment.centerRight,
                   margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: RaisedButton(
                     color: Colors.green,
-                    onPressed: (){
+             onPressed: (){
                       loginPressed();
-                    },
+             },
                     /*    onPressed: (){
                       Navigator.push(context,
                         MaterialPageRoute(builder: (context) =>

@@ -4,6 +4,8 @@ import 'package:radium_tech/Screens/neighbour_details.dart';
 import 'package:radium_tech/Screens/residence_profile.dart';
 import 'package:radium_tech/sign_in.dart';
 
+import 'Screens/user_list.dart';
+
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -12,8 +14,23 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.green[700],
         title: const Text('Survey'),
+        actions: [
+          FlatButton(onPressed: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>  LoginScreen(),
+                ));
+          }, child: const Text('Logout',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0
+            ),
+          ))
+        ],
       ),
       body: Padding(
         padding:  EdgeInsets.only(bottom: 100.0),
@@ -33,6 +50,11 @@ class MyHomePage extends StatelessWidget {
                     ), borderRadius: BorderRadius.circular(50)),
                     color: Colors.black,
                     onPressed: (){
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) =>
+                            UserData(),
+                        ),
+                      );
 
                     },
                     icon: const Icon(Icons.computer,
@@ -233,34 +255,37 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  width: 300,
-                  height: 50,
-                  child: FlatButton.icon(
-                    shape: RoundedRectangleBorder(side: const BorderSide(
-                        color: Colors.blue,
-                        width: 1,
-                        style: BorderStyle.solid
-                    ), borderRadius: BorderRadius.circular(50)),
-                    color: Colors.purple,
-                    onPressed: (){
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>  LoginScreen(),
-                          ));
-                    },
-                    icon: const Icon(Icons.cancel,
-                      color: Colors.white,
-                    ),
-                    label: const Text('Log Out',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    FlatButton.icon(
+                      onPressed: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => const UserData(),
+                            ));
+                      },
+              label: Text('Back To List'),
+                      icon: Icon(Icons.arrow_back_ios,
+                      size: 15,
                       ),
+
+
+
                     ),
-                  ),
+                    FlatButton.icon(
+                      onPressed: (){},
+                      label: Text('Submit'),
+                      icon: Icon(Icons.navigate_next),
+
+
+
+                    ),
+                  ],
                 ),
+
+
               ],
             ),
           ),
