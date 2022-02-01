@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:radium_tech/Components/dropdown_button.dart';
 
+import '../myhome.dart';
+
 class ResidenceProfile extends StatefulWidget {
 
   @override
@@ -9,7 +11,13 @@ class ResidenceProfile extends StatefulWidget {
 }
 
 class _ResidenceProfileState extends State<ResidenceProfile> {
-  bool valuesix = false;
+  bool value1 = false;
+  bool value2 = false;
+  bool value3 = false;
+  bool value4 = false;
+  bool value5 = false;
+  bool value6 = false;
+  bool value7 = false;
   var selected;
   int myf = 1;
   int myg = 2;
@@ -54,10 +62,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                             shape: CircleBorder(),
                             checkColor: Color(0xff6276B9),
                             activeColor: Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value1,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value1 = value!;
                               });
                             },
                           ),
@@ -70,10 +78,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                             shape: CircleBorder(),
                             checkColor: Color(0xff6276B9),
                             activeColor: Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value2,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value2 = value!;
                               });
                             },
                           ),
@@ -108,10 +116,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                             shape: CircleBorder(),
                             checkColor: Color(0xff6276B9),
                             activeColor: Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value3,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value3 = value!;
                               });
                             },
                           ),
@@ -124,10 +132,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                             shape: CircleBorder(),
                             checkColor: Color(0xff6276B9),
                             activeColor: Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value4,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value4 = value!;
                               });
                             },
                           ),
@@ -174,10 +182,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                             shape: CircleBorder(),
                             checkColor: Color(0xff6276B9),
                             activeColor: Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value5,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value5 = value!;
                               });
                             },
                           ),
@@ -190,10 +198,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                             shape: CircleBorder(),
                             checkColor: Color(0xff6276B9),
                             activeColor: Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value6,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value6 = value!;
                               });
                             },
                           ),
@@ -226,10 +234,10 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                           Checkbox(
                             checkColor: const Color(0xff6276B9),
                             activeColor: const Color(0xff6276B9),
-                            value: this.valuesix,
+                            value: this.value7,
                             onChanged: (value) {
                               setState(() {
-                                this.valuesix = value!;
+                                this.value7 = value!;
                               });
                             },
                           ),
@@ -384,6 +392,74 @@ class _ResidenceProfileState extends State<ResidenceProfile> {
                       left: 40.0,
                       top: 30.0,
                       child: DropDownDesign(),
+
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    FlatButton.icon(
+                      onPressed: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>  MyHomePage(),
+                            ));
+                      },
+                      label: const Text('Back To List'),
+                      icon: const Icon(Icons.arrow_back_ios,
+                        size: 15,
+                      ),
+
+
+
+                    ),
+                    FlatButton.icon(
+                      onPressed: (){
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                Color(0xff314398),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(
+                                        Radius.circular(
+                                            10.0))),
+                                content: const Text('Are you Sure to Submit?'),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    color: Colors.red,
+                                    textColor: Colors.white,
+                                    child: const Text('CANCEL'),
+                                    onPressed: () {
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  ),
+                                  FlatButton(
+                                    color: Colors.blueAccent,
+                                    textColor: Colors.white,
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      setState(() {
+
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                      label: Text('Save'),
+                      icon: Icon(Icons.navigate_next),
+
+
 
                     ),
                   ],

@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:radium_tech/Apis/GetApis/listing_get.dart';
 import 'package:radium_tech/Components/user_card.dart';
+import 'package:radium_tech/Model/listing_model.dart';
 import 'package:radium_tech/sign_in.dart';
 
 import '../myhome.dart';
@@ -13,6 +15,13 @@ class UserData extends StatefulWidget {
 }
 
 class _UserDataState extends State<UserData> {
+  Future<Welcome>? userListing;
+  @override
+  void initState() {
+    userListing = ApiMale().getList();
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +37,7 @@ class _UserDataState extends State<UserData> {
                 MaterialPageRoute(
                   builder: (BuildContext context) =>  LoginScreen(),
                 ));
-          }, child: Text('Logout',
+          }, child: const Text('Logout',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20.0
@@ -37,12 +46,84 @@ class _UserDataState extends State<UserData> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Column(
-            children: <Widget>[
+        child: FutureBuilder<Welcome>(
+          future: userListing,
+          builder:  (context,  snapshot)
+          {
+            if(snapshot.hasData) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                itemCount: snapshot.data!.data!.length,
+                  itemBuilder:(context, index){
+                    var listData = snapshot.data!.data![index];
+                  return Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Column(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) => const MyHomePage(),
+                                    ));
+                              },
+                              child: Container(
+                                height: 100.0,
 
-              UserCard(),
+                                child: Card(
+                                  color: Colors.green,
+                                  child: ListTile(
+                                    leading: Image.asset('assets/job-creation-512.png'),
+                                    title:  Text(
+                                      listData.applicantName!,
+                                      style: const TextStyle(color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25.0
+                                      ),
+                                    ),
+                                    subtitle: Padding(
+                                      padding:  EdgeInsets.only(right: 100.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children:  [
+                                          Text(listData.region!,
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          Text(listData.type!,
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          Text(listData.applicantContact!,
+                                            style: TextStyle(color: Colors.yellowAccent),
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                    trailing: const Padding(
+                                      padding: EdgeInsets.only(top: 10.0),
+                                      child: Icon(Icons.navigate_next,
+                                        color: Colors.white,
+                                        size:30.0,
+                                      ),
+                                    ),
+
+                                  ),
+
+                                ),
+                              ),
+                            )]));
+                  }
+              );
+            } else{
+              return CircularProgressIndicator();
+
+            }
+          },
+
+        )));
+
+      /*        UserCard(),
 
               SizedBox(height: 20.0),
               UserCard(),
@@ -52,14 +133,10 @@ class _UserDataState extends State<UserData> {
               UserCard(),
               SizedBox(height: 20.0),
               UserCard(),
-              SizedBox(height: 20.0),
+              SizedBox(height: 20.0),*/
 
 
 
-            ],
-          ),
-        ),
-      ),
-    );
+
   }
 }

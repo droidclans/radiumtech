@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:radium_tech/Screens/user_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Services/globals.dart';
 import 'Services/login_api.dart';
 import 'myhome.dart';
@@ -19,26 +20,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final passController = TextEditingController();
   String _email = '';
   String _password = '';
-  String message = '';
+  String message = 'Login Failed';
   bool _validate = false;
 
 
 
 
   loginPressed() async {
-    if (_email.isNotEmpty && _password.isNotEmpty) {
+    if (emailController.text.isNotEmpty && passController.text.isNotEmpty) {
       http.Response response = await AuthServices.login(_email, _password);
       Map responseMap = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => const UserData(),
+              builder: (BuildContext context) =>  UserData(),
             ));
       } else {
-        setState(() {
-          message = 'Login Failed';
-        });
+          errorSnackBar(context, 'Invalid Credential');
 
       }
     }
@@ -59,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 Container(
                   alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: const Text(
                     "LOGIN",
                     style: TextStyle(
@@ -72,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: size.height * 0.03),
                 Container(
                   alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: 40),
+                  margin: const EdgeInsets.symmetric(horizontal: 40),
                   child: TextFormField(
                     onChanged: (value) {
                       _email = value;
@@ -107,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: passController,
                     //controller: passController,
                     validator: (value) {
-                      if(value == null) {
+                      if(value == null || value.isEmpty) {
                         return 'Password cannot be empty';
                       }
                       return  null;
@@ -125,11 +124,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: size.height * 0.05),
                 Container(
                   alignment: Alignment.centerRight,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: RaisedButton(
                     color: Colors.green,
              onPressed: (){
-                      loginPressed();
+                      if(_fromKey.currentState!.validate()){
+                        logIn();
+                      }
+
              },
                     /*    onPressed: (){
                       Navigator.push(context,
@@ -219,6 +221,50 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
         );
 
+
+  }
+  void logIn() async{
+
+    if(passController.text.isNotEmpty && emailController.text.isNotEmpty) {
+      var response = await http.post(Uri.parse('https://testerp.radiumpk.com/signin'),
+      body: ({
+        'email': emailController.text,
+        'password': passController.text
+      })
+      );
+      if(response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        errorSnackBar(context, 'Succefully Login ${body['']}');
+        pageRoute(body!['token']);
+       // Map<String,dynamic>user=response['data'];
+        //savePref(user['survey_id']);
+        print(savePref);
+
+
+      } else {
+        errorSnackBar(context, 'Invalid Credential');
+      }
+    }else {
+      errorSnackBar(context, 'empty');
+    }
+
+  }
+  void pageRoute(String token) async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('signin', token);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>  UserData(),
+        ));
+
+  }
+  savePref(int survey_id) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setInt("survey_id", survey_id);
+
+    preferences.commit();
 
   }
 }

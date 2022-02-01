@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:radium_tech/Screens/applicant_details.dart';
+import 'package:radium_tech/Screens/image_picking.dart';
 import 'package:radium_tech/Screens/neighbour_details.dart';
 import 'package:radium_tech/Screens/residence_profile.dart';
 import 'package:radium_tech/sign_in.dart';
-
+import 'Screens/user_applicant_details.dart';
 import 'Screens/user_list.dart';
 
 
@@ -80,6 +82,11 @@ class MyHomePage extends StatelessWidget {
                     ), borderRadius: BorderRadius.circular(50)),
                     color: Colors.blueAccent,
                     onPressed: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>  ApplicantDetails(),
+                          ));
                     },
                     icon: const Icon(Icons.contact_page,
                       color: Colors.white,
@@ -166,6 +173,11 @@ class MyHomePage extends StatelessWidget {
                         ), borderRadius: BorderRadius.circular(50)),
                         color: Colors.blueGrey,
                         onPressed: (){
+                          Navigator.push(context,
+                            MaterialPageRoute(builder: (context) =>
+                                NeighbourDetails(),
+                            ),
+                          );
                         },
                         icon: const Icon(Icons.perm_identity_sharp,
                           color: Colors.white,
@@ -194,6 +206,11 @@ class MyHomePage extends StatelessWidget {
                     ), borderRadius: BorderRadius.circular(50)),
                     color: Colors.black,
                     onPressed: (){
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) =>
+                            MyImagePick(),
+                        ),
+                      );
                     },
                     icon: const Icon(Icons.camera_alt,
                       color: Colors.white,
@@ -218,6 +235,11 @@ class MyHomePage extends StatelessWidget {
                     ), borderRadius: BorderRadius.circular(50)),
                     color: Colors.blueAccent,
                     onPressed: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>  UserApplicantDetails(),
+                          ));
                     },
                     icon: const Icon(Icons.verified,
                       color: Colors.white,
@@ -263,10 +285,10 @@ class MyHomePage extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => const UserData(),
+                              builder: (BuildContext context) =>  UserData(),
                             ));
                       },
-              label: Text('Back To List'),
+              label: const Text('Back To List'),
                       icon: Icon(Icons.arrow_back_ios,
                       size: 15,
                       ),
