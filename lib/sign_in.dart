@@ -15,7 +15,23 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _fromKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+  var member_email;
+  var member_password;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool _checkLogin = true;
+
+/*  SnackbarController _showMsg(msg) {
+    return Get.snackbar(
+      "Welcome to Flutter Agency",
+      "We are expert in FLutter App Development",
+      icon: Icon(Icons.person, color: Colors.white),
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }*/
+ /* final _fromKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passController = TextEditingController();
   String _email = '';
@@ -44,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
     else {
       errorSnackBar(context, 'enter all required fields');
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       body:  Form(
-        key: _fromKey,
+        key: _formKey,
         child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -73,16 +89,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.center,
                   margin: const EdgeInsets.symmetric(horizontal: 40),
                   child: TextFormField(
-                    onChanged: (value) {
-                      _email = value;
-                    },
-                    controller: emailController,
-
-                    validator: (value) {
-                      if(value == null || value.isEmpty) {
-                        return 'Email cannot be empty';
+                    validator: (emailValue) {
+                      if (emailValue!.isEmpty) {
+                        return 'Please enter email';
                       }
-                      return  null;
+                      member_email = emailValue;
+                      return null;
                     },
                     keyboardType: TextInputType.emailAddress,
                     decoration:  InputDecoration(
@@ -100,17 +112,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 40),
                   child: TextFormField(
-                    onChanged: (value) {
-                      _password = value;
+                    validator: (passwordValue) {
+                      if (passwordValue!.isEmpty) {
+                        return 'Please Enter Password';
+                      }
+                      member_password = passwordValue;
+                      return null;
                     },
-                    controller: passController,
+                  /*  onChanged: (value) {
+                      _password = value;
+                    },*/
+
+                   // controller: passController,
                     //controller: passController,
-                    validator: (value) {
+                /*    validator: (value) {
                       if(value == null || value.isEmpty) {
                         return 'Password cannot be empty';
                       }
                       return  null;
-                    },
+                    },*/
                     keyboardType: TextInputType.text,
                     decoration:  InputDecoration(
                         labelText: "Password",
@@ -128,9 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: RaisedButton(
                     color: Colors.green,
              onPressed: (){
-                      if(_fromKey.currentState!.validate()){
-                        logIn();
+                      if(_formKey.currentState!.validate()){
+                        _login();
                       }
+
 
              },
                     /*    onPressed: (){
@@ -199,8 +220,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
+        Text(
+            _checkLogin ? "" : "Username or password is invalid",
+            style: TextStyle(color: Colors.red)),
                 //Text(message),
-                Container(
+                /*Container(
                   alignment: Alignment.centerRight,
                   margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   child: GestureDetector(
@@ -215,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Color(0xFF2661FA)),
                     ),
                   ),
-                )
+                )*/
               ],
             ),
       ),
@@ -223,7 +247,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   }
-  void logIn() async{
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+      _checkLogin = true;
+    });
+    var data = {'email': member_email, 'password': member_password};
+    print(data);
+
+    var res = await   Network().authData(data, '/signin');
+    print(res);
+    var body =  jsonDecode(res.body);
+    print(body);
+    if (body['success']) {
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.setString('token', json.encode(body['token']));
+      localStorage.setString('user', json.encode(body['username']));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UserData()),
+      );
+      _checkLogin = true;
+    } else {
+      //(body['message']);
+      _checkLogin = false;
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+/*  void logIn() async{
 
     if(passController.text.isNotEmpty && emailController.text.isNotEmpty) {
       var response = await http.post(Uri.parse('https://testerp.radiumpk.com/signin'),
@@ -266,5 +320,5 @@ class _LoginScreenState extends State<LoginScreen> {
 
     preferences.commit();
 
-  }
+  }*/
 }

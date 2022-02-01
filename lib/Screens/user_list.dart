@@ -1,9 +1,12 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:radium_tech/Apis/GetApis/listing_get.dart';
 import 'package:radium_tech/Components/user_card.dart';
 import 'package:radium_tech/Model/listing_model.dart';
 import 'package:radium_tech/sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../myhome.dart';
 
@@ -15,6 +18,20 @@ class UserData extends StatefulWidget {
 }
 
 class _UserDataState extends State<UserData> {
+  @override
+/*  void initState() {
+    _loadUserData();
+    super.initState();
+  }*/
+
+  _loadUserData() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var user = jsonDecode(localStorage.getString('user')!);
+
+    if (user != null) {
+      setState(() {});
+    }
+  }
   Future<Welcome>? userListing;
   @override
   void initState() {
@@ -32,11 +49,7 @@ class _UserDataState extends State<UserData> {
         title: Text('Sameer ahmed khan'),
         actions: [
           FlatButton(onPressed: (){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) =>  LoginScreen(),
-                ));
+            logout();
           }, child: const Text('Logout',
           style: TextStyle(
             color: Colors.white,
@@ -138,5 +151,13 @@ class _UserDataState extends State<UserData> {
 
 
 
+  }
+  void logout() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.clear();
+    // localStorage.remove('user');
+    // localStorage.remove('token');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }

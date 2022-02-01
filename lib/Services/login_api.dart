@@ -1,4 +1,39 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Network {
+  var _url = 'http://192.168.18.65:8000';
+  // String apiUrl = "signin";
+  //if you are using android studio emulator, change localhost to 10.0.2.2
+  var token;
+
+  _getToken() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    token = jsonDecode(localStorage.getString('token')!)['token'];
+  }
+
+  authData(data, apiUrl) async {
+    String fullUrl = _url + apiUrl;
+    var completeUrl = Uri.parse(fullUrl);
+    return await http.post(completeUrl,
+        body: jsonEncode(data), headers: _setHeaders());
+  }
+
+  getData(apiUrl) async {
+    String fullUrl = _url + apiUrl;
+    var completeUrl = Uri.parse(fullUrl);
+    await _getToken();
+    return await http.get(completeUrl , headers: _setHeaders());
+  }
+
+  _setHeaders() => {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token'
+  };
+}
+/*import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +59,7 @@ class AuthServices {
     print(response.body);
     return response;
   }
-}
+}*/
 /*
 import 'dart:convert';
 import 'package:http/http.dart' as http;
